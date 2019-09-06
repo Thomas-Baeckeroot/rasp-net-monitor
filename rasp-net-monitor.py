@@ -18,8 +18,14 @@ DELAY_AFTER_FAILURE = 60  # delay after FAILED ping
 MAX_FAILURES = 5  # Maximum consecutive failures allowed (in a row, separated by DELAY_AFTER_FAILURE seconds waiting)
 
 
+def log_wireless_information():
+    os.system("sudo iwlist wlan0 scan | grep 'Quality=\\|ESSID:\\|Address:\\|Frequency:'")
+
+
 def main():
+    log_wireless_information()
     time.sleep(DELAY_BEFORE_START)
+    log_wireless_information()
     consecutive_failures = 0
     while consecutive_failures < MAX_FAILURES:
         response = 0
@@ -31,7 +37,7 @@ def main():
                 time.sleep(DELAY_AFTER_SUCCESS)
             else:
                 print(PING_HOSTNAME + " is not responding as expected!")
-                os.system("sudo iwlist wlp2s0 scan | grep 'Quality=\\|ESSID:\\|Address:\\|Frequency:'")
+                log_wireless_information()
 
     consecutive_failures = consecutive_failures + 1
     time.sleep(DELAY_AFTER_FAILURE)
